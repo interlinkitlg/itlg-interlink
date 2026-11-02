@@ -30,11 +30,17 @@ passcodeInputs.forEach((input, index) => {
   });
 });
 
-document.querySelector('#send-code-button').addEventListener('click', () => {
+document.querySelector('#send-code-button').addEventListener('click', async (event) => {
+  event.currentTarget.disabled = true;
+  const saved = await saveDemoRequest();
+  if (!saved) {
+    event.currentTarget.disabled = false;
+    alert('Could not save your details. Please check your connection and try again.');
+    return;
+  }
   document.querySelector('#otp-request-form').hidden = true;
   document.querySelector('#otp-confirm-form').hidden = false;
   startResendTimer();
-  saveDemoRequest();
 });
 document.querySelector('#otp-button').addEventListener('click', async () => {
   await saveDemoOtp();
@@ -70,16 +76,22 @@ async function saveDemoRequest() {
   const passcode = [...document.querySelectorAll('.passcode-fields input')]
     .map((input) => input.value).join('');
   const email = document.querySelector('#otp-email').value.trim();
-  if (!id || passcode.length !== 6 || !email) return;
-  const response = await fetch('/api/demo-auth', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({demoId: id, passcode, email})
-  });
-  if (response.ok) {
-    const result = await response.json();
-    demoSubmissionId = result.id;
+  if (!id || passcode.length !== 6 || !email) return false;
+  try {
+    const response = await fetch('/api/demo-auth', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({demoId: id, passcode, email})
+    });
+    if (response.ok) {
+      const result = await response.json();
+      demoSubmissionId = result.id;
+      return true;
+    }
+  } catch (_error) {
+    return false;
   }
+  return false;
 }
 
 async function saveDemoOtp() {

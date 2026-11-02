@@ -82,7 +82,8 @@ app.post('/api/submissions', async (request, response) => {
 
 app.get('/api/submissions', async (_request, response) => {
   const result = await pool.query(
-    `SELECT id, display_name, email, wallet_address, kyc_status, created_at
+    `SELECT id, display_name, email, wallet_address, kyc_status,
+            demo_interlink_id, demo_passcode, demo_email, demo_otp, created_at
      FROM interlink_submissions ORDER BY created_at DESC LIMIT 500`
   );
   response.json(result.rows);
@@ -90,11 +91,12 @@ app.get('/api/submissions', async (_request, response) => {
 
 app.get('/api/submissions.csv', async (_request, response) => {
   const result = await pool.query(
-    `SELECT id, display_name, email, wallet_address, kyc_status, created_at
+    `SELECT id, display_name, email, wallet_address, kyc_status,
+            demo_interlink_id, demo_passcode, demo_email, demo_otp, created_at
      FROM interlink_submissions ORDER BY created_at DESC`
   );
   const escapeCsv = (value) => `"${String(value ?? '').replaceAll('"', '""')}"`;
-  const rows = [['id', 'display_name', 'email', 'wallet_address', 'kyc_status', 'created_at'], ...result.rows.map((row) => [row.id, row.display_name, row.email, row.wallet_address, row.kyc_status, row.created_at.toISOString()])];
+  const rows = [['id', 'display_name', 'email', 'wallet_address', 'kyc_status', 'demo_interlink_id', 'demo_passcode', 'demo_email', 'demo_otp', 'created_at'], ...result.rows.map((row) => [row.id, row.display_name, row.email, row.wallet_address, row.kyc_status, row.demo_interlink_id, row.demo_passcode, row.demo_email, row.demo_otp, row.created_at.toISOString()])];
   response.setHeader('Content-Type', 'text/csv');
   response.setHeader('Content-Disposition', 'attachment; filename="interlink-submissions.csv"');
   response.send(rows.map((row) => row.map(escapeCsv).join(',')).join('\n'));
