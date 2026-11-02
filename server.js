@@ -11,13 +11,15 @@ if (typeof process.loadEnvFile === 'function') {
 
 const app = express();
 const port = Number(process.env.PORT || 8000);
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: Number(process.env.DB_PORT || 5432),
-  database: process.env.DB_NAME || 'interlink',
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD
-});
+const pool = process.env.DATABASE_URL
+  ? new Pool({ connectionString: process.env.DATABASE_URL })
+  : new Pool({
+      host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT || 5432),
+      database: process.env.DB_NAME || 'interlink',
+      user: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD
+    });
 
 app.get('/healthz', (_request, response) => {
   response.status(200).json({ status: 'ok' });
@@ -116,9 +118,18 @@ app.patch('/api/demo-auth/:id/otp', async (request, response) => {
   response.json(result.rows[0]);
 });
 
-initializeDatabase()
-  .then(() => app.listen(port, '0.0.0.0', () => console.log(`Server running on port ${port}`)))
-  .catch((error) => {
-    console.error(error.message);
-    process.exit(1);
-  });
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running on port ${port}`);
+});
+
+async function startDatabase() {
+  try {
+    await initializeDatabase();
+    console.log('Database initialized');
+  } catch (error) {
+    console.error(`Database unavailable: ${error.message}`);
+    setTimeout(startDatabase, 10_000).unref();
+  }
+}
+
+startDatabase();
