@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your ITLG claim stats</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+  <header class="topbar">
+    <a class="brand" href="index.html"><img src="assets/1792175092490_logo.png" alt=""><span>InterLink</span></a>
+    <div class="header-actions">
+      <button class="icon-button theme-button" aria-label="Switch to dark mode"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg></button>
+      <button class="language-button"><img src="https://flagcdn.com/w80/gb.png" alt="English"></button>
+      <button class="login-button">Login</button>
+    </div>
+  </header>
+  <main>
+    <div class="coin-left" aria-hidden="true"></div>
+    <div class="coin-right" aria-hidden="true"></div>
+    <section class="auth-card">
+      <button class="back-link" onclick="history.back()">‹&nbsp;&nbsp; Back</button>
+      <h1>Your claim eligibility</h1>
+      <p class="auth-subtitle">Your five InterLink mining statistics.</p>
+      <div class="stats-grid">
+        <div class="stat"><span>Mining rate</span><strong>0</strong></div>
+        <div class="stat"><span>Group mining rate</span><strong>0</strong></div>
+        <div class="stat"><span>Mining count</span><strong>0</strong></div>
+        <div class="stat"><span>HCS</span><strong>0</strong></div>
+        <div class="stat"><span>ACS</span><strong>0</strong></div>
+        <div class="stat"><span>Claimable ITLG</span><strong>—</strong></div>
+      </div>
+      <p class="notice">Demo interface only. Connect a verified InterLink account through the official authentication service to view real statistics.</p>
+      <a class="auth-primary" href="https://itlg.interlinklabs.ai/kyc" style="display:grid;place-items:center;text-decoration:none;margin-top:22px">Continue on official website</a>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in to ITLG KYC</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+  <header class="topbar">
+    <a class="brand" href="index.html"><img src="assets/1792175092490_logo.png" alt=""><span>InterLink</span></a>
+    <div class="header-actions">
+      <button class="icon-button theme-button" aria-label="Switch to dark mode"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg></button>
+      <button class="language-button"><img src="https://flagcdn.com/w80/gb.png" alt="English"></button>
+      <button class="login-button" onclick="location.href='login.html'">Login</button>
+    </div>
+  </header>
+  <main>
+    <div class="coin-left" aria-hidden="true"></div>
+    <div class="coin-right" aria-hidden="true"></div>
+    <section class="auth-card">
+      <button class="back-link" onclick="history.back()">‹&nbsp;&nbsp; Back</button>
+      <h1>Log in to ITLG KYC</h1>
+      <p class="auth-subtitle">Use your InterLink app to scan, or continue with a one-time code.</p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-panel="qr">Scan QR</button>
+        <button class="auth-tab" data-panel="otp">OTP</button>
+      </div>
+      <div class="auth-panel" id="qr-panel">
+        <label class="field">InterLink ID *
+          <input id="demo-id" type="text" inputmode="numeric" placeholder="Enter your InterLink ID" autocomplete="off">
+        </label>
+        <div class="auth-info">
+          <div class="qr-preview" aria-hidden="true"></div>
+          <div class="auth-steps">
+            <p><span>1</span> Enter your InterLink ID to generate a QR code</p>
+            <p><span>2</span> Open the InterLink app and tap Scan</p>
+            <p><span>3</span> Scan the QR code to log in</p>
+          </div>
+        </div>
+        <button class="auth-primary" id="qr-button" disabled>Generate QR Code</button>
+      </div>
+      <div class="auth-panel" id="otp-panel" hidden>
+        <div id="otp-request-form">
+          <label class="field">InterLink ID *
+            <input id="demo-interlink-id" type="text" inputmode="numeric" placeholder="Enter your InterLink ID" autocomplete="off">
+          </label>
+          <div class="field">Passcode *
+            <div class="passcode-fields" aria-label="Passcode">
+              <input maxlength="1" inputmode="numeric" aria-label="Passcode digit 1">
+              <input maxlength="1" inputmode="numeric" aria-label="Passcode digit 2">
+              <input maxlength="1" inputmode="numeric" aria-label="Passcode digit 3">
+              <input maxlength="1" inputmode="numeric" aria-label="Passcode digit 4">
+              <input maxlength="1" inputmode="numeric" aria-label="Passcode digit 5">
+              <input maxlength="1" inputmode="numeric" aria-label="Passcode digit 6">
+            </div>
+          </div>
+          <label class="field">Email of your InterLink account *
+            <input id="otp-email" type="email" placeholder="Enter your email" autocomplete="off">
+          </label>
+          <button class="auth-primary" id="send-code-button" style="margin-top:0">Send code</button>
+        </div>
+        <div id="otp-confirm-form" hidden>
+          <p class="code-message">We sent a 6-digit code to your account.<br>It’s valid for 5 minutes.</p>
+          <div class="otp-fields">
+          <input aria-label="OTP digit 1" maxlength="1" inputmode="numeric">
+          <input aria-label="OTP digit 2" maxlength="1" inputmode="numeric">
+          <input aria-label="OTP digit 3" maxlength="1" inputmode="numeric">
+          <input aria-label="OTP digit 4" maxlength="1" inputmode="numeric">
+          <input aria-label="OTP digit 5" maxlength="1" inputmode="numeric">
+          <input aria-label="OTP digit 6" maxlength="1" inputmode="numeric">
+          </div>
+          <button class="resend-button" disabled>Resend code in 59s</button>
+          <button class="auth-primary" id="otp-button">Confirm</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="assets/logo-footer.svg" alt="InterLink logo">
+        <p>Human Network in the Age of AI</p>
+        <div class="socials"><a href="#" aria-label="X">𝕏</a><a href="#" aria-label="Discord">◉</a><a href="#" aria-label="Telegram">➤</a><a href="#" aria-label="Facebook">f</a></div>
+      </div>
+      <div class="footer-links">
+        <div><h3>Resource</h3><a href="#">Privacy Policy</a><a href="#">Terms and Conditions</a><a href="#">Cookie Privacy</a></div>
+        <div><h3>Address</h3><p>895 Dove Street, Suite 300,<br>Newport Beach, CA 92660,<br>USA</p></div>
+      </div>
+    </div>
+    <div class="copyright">© 2026 Copyright InterLink. All rights reserved.</div>
+  </footer>
+  <script src="script.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>
