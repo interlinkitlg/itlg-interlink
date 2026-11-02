@@ -6,12 +6,17 @@ if (typeof process.loadEnvFile === 'function') {
 }
 
 const app = express();
+const port = Number(process.env.PORT || 8000);
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT || 5432),
   database: process.env.DB_NAME || 'interlink',
   user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'root'
+  password: process.env.DB_PASSWORD
+});
+
+app.get('/healthz', (_request, response) => {
+  response.status(200).json({ status: 'ok' });
 });
 
 app.use(express.json({ limit: '32kb' }));
@@ -108,7 +113,7 @@ app.patch('/api/demo-auth/:id/otp', async (request, response) => {
 });
 
 initializeDatabase()
-  .then(() => app.listen(8000, () => console.log('Server running at http://localhost:8000')))
+  .then(() => app.listen(port, '0.0.0.0', () => console.log(`Server running on port ${port}`)))
   .catch((error) => {
     console.error(error.message);
     process.exit(1);
