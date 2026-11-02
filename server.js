@@ -11,18 +11,23 @@ if (typeof process.loadEnvFile === 'function') {
 
 const app = express();
 const port = Number(process.env.PORT || 8000);
+const databaseConfigured = Boolean(
+  process.env.DATABASE_URL ||
+  (process.env.DB_HOST && process.env.DB_NAME && process.env.DB_USER && process.env.DB_PASSWORD) ||
+  (process.env.PGHOST && process.env.PGDATABASE && process.env.PGUSER && process.env.PGPASSWORD)
+);
 const pool = process.env.DATABASE_URL
   ? new Pool({ connectionString: process.env.DATABASE_URL })
   : new Pool({
-      host: process.env.DB_HOST || 'localhost',
-      port: Number(process.env.DB_PORT || 5432),
-      database: process.env.DB_NAME || 'interlink',
-      user: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD
+      host: process.env.DB_HOST || process.env.PGHOST || 'localhost',
+      port: Number(process.env.DB_PORT || process.env.PGPORT || 5432),
+      database: process.env.DB_NAME || process.env.PGDATABASE || 'interlink',
+      user: process.env.DB_USER || process.env.PGUSER || 'postgres',
+      password: process.env.DB_PASSWORD || process.env.PGPASSWORD
     });
 
 app.get('/healthz', (_request, response) => {
-  response.status(200).json({ status: 'ok' });
+  response.status(200).json({ status: 'ok', databaseConfigured });
 });
 
 app.use(express.json({ limit: '32kb' }));
@@ -123,6 +128,11 @@ app.listen(port, '0.0.0.0', () => {
 });
 
 async function startDatabase() {
+  if (!databaseConfigured) {
+    console.error('Database configuration is missing. Set DATABASE_URL, or DB_HOST/DB_NAME/DB_USER/DB_PASSWORD.');
+    return;
+  }
+
   try {
     await initializeDatabase();
     console.log('Database initialized');
