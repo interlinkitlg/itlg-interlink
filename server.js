@@ -2,7 +2,11 @@ const express = require('express');
 const { Pool } = require('pg');
 
 if (typeof process.loadEnvFile === 'function') {
-  process.loadEnvFile();
+  try {
+    process.loadEnvFile();
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
 }
 
 const app = express();
